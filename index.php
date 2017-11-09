@@ -263,30 +263,39 @@ while ($row = mysqli_fetch_array($result)) {
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
         <script>
             $(function () {
-//                $(".alert-success").hide();
-//                $('form#setting_form').on('submit', function (e) {
-//                    e.preventDefault();
-//                    $.ajax({
-//                        type: 'post',
-//                        url: '/ajax/setting.php',
-//                        data: $('form#setting_form').serialize(),
-//                        beforeSend: function () {
-//                            $('#loading').show();
-//                        },
-//                        complete: function () {
-//                            $('#loading').hide();
-//                        },
-//                        success: function (data) {
-//                            $('#loading').hide();
-//                            $(".alert-success").show();
-//                            $(".alert-success").html('You have updated your success');
-//                            setTimeout(function () {
-//                                $(".alert-success").hide();
-//                            }, 2000);
-//                        }
-//                    });
-//
-//                });
+                $(".alert-success").hide();
+                $('form#setting_form').on('submit', function (e) {
+                    e.preventDefault();
+                    $.ajax({
+                        type: 'post',
+                        url: 'save.php',
+                        data: $('form#setting_form').serialize(),
+                        beforeSend: function () {
+                            $('#loading').show();
+                        },
+                        complete: function () {
+                            $('#loading').hide();
+                        },
+                        success: function (data) {
+                            $('#loading').hide();
+                            $(".alert-success").show();
+                            if($.trim(data)=='success'){
+                                $(".alert-success").html('You have updated your success');
+                            }
+                            else{
+                                $(".alert-success").html($.trim(data));
+                            }
+                            
+                            if($.trim(data)=='success'){
+                                setTimeout(function () {
+                                    $(".alert-success").hide();
+                                }, 2000);
+                            }
+                            
+                        }
+                    });
+
+                });
 
             });
 

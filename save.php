@@ -1,7 +1,16 @@
 <?php
 
 if (count($_POST) == 0) {
-    header("Location:index.php");
+    echo '';
+    exit;
+}
+
+if(trim($_POST['title'])==''){
+    echo 'Please input title';
+    exit;
+}
+if(trim($_POST['url'])==''){
+    echo 'Please input url';
     exit;
 }
 $conn = mysqli_connect('localhost', 'root', '', 'aoramaterial');
@@ -44,5 +53,6 @@ $values .= ")";
 
 mysqli_query($conn, "INSERT INTO aoramaterial $fields VALUES $values");
 
-header("Location:index.php");
+echo 'success';
+exit;
 
