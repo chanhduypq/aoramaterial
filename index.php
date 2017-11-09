@@ -1,26 +1,4 @@
 <?php 
-//if(count($_POST)>0){
-//    $conn = mysqli_connect('localhost', 'root', '', 'aoramaterial');
-//$data=$_POST;
-//$data['user_id']=1;
-//$sql='INSERT INTO aoramaterial ';
-//$fields="(";
-//$values='(';
-//foreach ($data as $key=>$value){
-//    if($key!='weight_type'){
-//        $fields.="$key,";
-//        $values.="'".str_replace("'", "\'", $value)."',";
-//    }
-//    
-//}
-//$fields= rtrim($fields,',');
-//$values= rtrim($values,',');
-//$fields.=")";
-//$values.=")";
-//echo "INSERT INTO aoramaterial $fields values $values";
-//exit;
-//}
-//var_dump($_POST);
 $conn = mysqli_connect('localhost', 'root', '', 'aoramaterial');
 $result = mysqli_query($conn, "select * from currency");
 $currencys = array();
@@ -37,7 +15,7 @@ while ($row = mysqli_fetch_array($result)) {
         <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
         <title>Aora Material</title>
         <!-- Latest compiled and minified CSS -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <link rel="stylesheet" href="public/css/bootstrap.min.css">
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
@@ -148,6 +126,7 @@ while ($row = mysqli_fetch_array($result)) {
                     <div class="col-lg-6 col-md-6">
 
                         <div class='row'>
+                                                        
                             <div class="col-lg-12 col-md-12">						
                                 <div class="form-group">
                                     <label style="cursor: default;">Variant specifics url change: </label>
@@ -216,7 +195,7 @@ while ($row = mysqli_fetch_array($result)) {
                                     <label for="length_type">Formula</label>
                                     <select class="form-control" name="length_type" id='length_type'>
                                         <option value='cm' selected="selected">cm</option>
-                                        <option value='inch' >inch</option>
+                                        <option value='inch'>inch</option>
                                     </select>
                                 </div>
                             </div>
@@ -258,13 +237,24 @@ while ($row = mysqli_fetch_array($result)) {
                 </div>
         </footer>
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script src="public/js/jquery-2.0.3.js"></script>
         <!-- Include all compiled plugins (below), or include individual files as needed -->
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <script src="public/js/bootstrap.min.js"></script>
+        <script src="public/js/jquery.number.js"></script>
         <script>
             $(function () {
+                $('#shipping_length').number( true, 2 );
+                $('#shipping_width').number( true, 2 );
+                $('#shipping_height').number( true, 2 );
+                $('#shipping_weight').number( true, 2 );
+                $('#price').number( true, 0 );
+                $('#price_retail').number( true, 0 );
+                
                 $(".alert-success").hide();
                 $('form#setting_form').on('submit', function (e) {
+                    $(".alert-success").removeClass('error').hide();
+                    $("#title").removeClass('error');
+                    $("#url").removeClass('error');
                     e.preventDefault();
                     $.ajax({
                         type: 'post',
@@ -278,18 +268,32 @@ while ($row = mysqli_fetch_array($result)) {
                         },
                         success: function (data) {
                             $('#loading').hide();
-                            $(".alert-success").show();
-                            if($.trim(data)=='success'){
-                                $(".alert-success").html('You have updated your success');
+                            
+                            
+                            if(typeof data === 'string'&&$.trim(data)=='success'){
+                                $(".alert-success").html('You saved successfully');
                             }
                             else{
-                                $(".alert-success").html($.trim(data));
+                                data=$.parseJSON(data);
+                                for(key in data){
+                                    if(key=='title'){
+                                        $("#title").addClass('error');
+                                    }
+                                    if(key=='url'){
+                                        $("#url").addClass('error');
+                                    }
+                                }
+                                $(".alert-success").html('Please input full information.').addClass('error');
+                                
                             }
+                            $(".alert-success").show();
                             
-                            if($.trim(data)=='success'){
+                            if(typeof data === 'string'&&$.trim(data)=='success'){
+                                $("form#setting_form").trigger("reset");
                                 setTimeout(function () {
                                     $(".alert-success").hide();
-                                }, 2000);
+                                }, 3000);
+                                
                             }
                             
                         }
@@ -306,7 +310,14 @@ while ($row = mysqli_fetch_array($result)) {
                 cursor: pointer;
             }
             label.radio{
-                width: 50%;
+                width: 10%;
+                margin-left: 30px;
+            }
+            .alert-success.error{
+                color: red;
+            }
+            input.error{
+                border: 1px red solid;
             }
             /* Absolute Center Spinner */
             .loading {
