@@ -99,7 +99,7 @@ while ($row = mysqli_fetch_array($result)) {
                         <div class='row'>
                             <div class="col-lg-12 col-md-12">
                                 <div class="form-group">
-                                    <label for="main_image">Main image: </label>
+                                    <label for="main_image">Main image (url): </label>
                                     <input type="text" id='main_image' class="form-control" name="main_image" value="">
                                 </div>
                             </div>
@@ -107,7 +107,7 @@ while ($row = mysqli_fetch_array($result)) {
                         <div class='row'>
                             <div class="col-lg-12 col-md-12">
                                 <div class="form-group">
-                                    <label for="other_image">Other image: </label>
+                                    <label for="other_image">Other image (url): </label>
                                     <input type="text" class="form-control" name="other_image" id='other_image' value="">
                                 </div>
                             </div>
