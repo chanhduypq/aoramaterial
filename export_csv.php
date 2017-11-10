@@ -12,7 +12,6 @@ $columns = array(
     'other_image',
     'main_category',
     'sub_category',
-    'variant_specifics_url_change',
     'variant_specifics_url',
     'product_details',
     'shipping_weight',
@@ -38,7 +37,6 @@ while ($row = mysqli_fetch_array($result)) {
     $row['shipping_length'] = ($row['shipping_length'] != '' ? number_format($row['shipping_weight'], 2, ".", ",") : '');
     $row['shipping_width'] = ($row['shipping_width'] != '' ? number_format($row['shipping_weight'], 2, ".", ",") : '');
     $row['shipping_height'] = ($row['shipping_height'] != '' ? number_format($row['shipping_weight'], 2, ".", ",") : '');
-    $row['variant_specifics_url_change'] = $row['variant_specifics_url_change'] == '1' ? 'YES' : 'NO';
     fputcsv($file, $row);
 }
 fclose($file);

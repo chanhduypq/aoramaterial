@@ -74,6 +74,8 @@ function setup(&$data) {
     if (isset($data['length_type'])) {
         unset($data['length_type']);
     }
+    
+    unset($data['variant_specifics_url_change']);
 }
 
 function buildQuery($data, &$fields, &$values) {
