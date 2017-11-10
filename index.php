@@ -348,7 +348,12 @@ while ($row = mysqli_fetch_array($result)) {
                             
                             if(typeof data === 'string'&&$.trim(data)=='success'){
                                 $("form#setting_form").trigger("reset");
-                                $("input[type='radio']").val('1').trigger('change');
+                                $("input.yes,textarea.yes").removeAttr('readonly');
+                                $("input.no,textarea.no").attr('readonly','readonly');
+
+                                $("select.yes").removeAttr('disabled');
+                                $("select.no").attr('disabled','disabled');
+                                
                                 setTimeout(function () {
                                     $(".alert-success").hide();
                                 }, 3000);
