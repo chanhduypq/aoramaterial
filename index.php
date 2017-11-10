@@ -49,7 +49,7 @@ while ($row = mysqli_fetch_array($result)) {
                         <div class='row'>
                             <div class="col-lg-12 col-md-12">
                                 <div class="form-group">
-                                    <label for="title">Title: </label>
+                                    <label for="title">Title:<span style="color: red;">&nbsp;&nbsp;*</span> </label>
                                     <input type="text" class="form-control" id='title' name="title" value="">
                                 </div>
                             </div>
@@ -57,7 +57,7 @@ while ($row = mysqli_fetch_array($result)) {
                         <div class='row'>
                             <div class="col-lg-12 col-md-12">
                                 <div class="form-group">
-                                    <label for="url">Url: </label>
+                                    <label for="url">Url:<span style="color: red;">&nbsp;&nbsp;*</span> </label>
                                     <input type="text" class="form-control" id='url' name="url" value="">
                                 </div>
                             </div>
