@@ -12,6 +12,7 @@ $columns = array(
     'other_image',
     'main_category',
     'sub_category',
+    'sub_sub_category',
     'variant_specifics_url',
     'product_details',
     'shipping_weight',

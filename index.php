@@ -129,6 +129,15 @@ while ($row = mysqli_fetch_array($result)) {
                                 </div>	
                             </div>
                         </div>
+                        
+                        <div class='row'>
+                            <div class="col-lg-12 col-md-12">
+                                <div class="form-group">
+                                    <label for="sub_sub_category">Sub sub category: </label>
+                                    <input type="text" class="form-control" name="sub_sub_category" id='sub_sub_category' value="">
+                                </div>	
+                            </div>
+                        </div>
                     </div>
                     <div class="col-lg-6 col-md-6">
 
@@ -152,7 +161,7 @@ while ($row = mysqli_fetch_array($result)) {
                             <div class="col-lg-12 col-md-12">								
                                 <div class="form-group">
                                     <label for="variant_specifics_url">Variant specifics url: </label>
-                                    <input type="text" class="form-control variant_specifics_url_change yes" name="variant_specifics_url" id='variant_specifics_url' value="">
+                                    <textarea type="text" class="form-control" name="variant_specifics_url" id='variant_specifics_url' value=""> </textarea>
                                 </div>
                             </div>
                         </div>									
@@ -160,13 +169,13 @@ while ($row = mysqli_fetch_array($result)) {
                             <div class="col-lg-9 col-md-9">
                                 <div class="form-group">
                                     <label for="shipping_weight">Shipping weight: </label>
-                                    <input readonly="readonly" type="text" class="form-control variant_specifics_url_change readonly no" name="shipping_weight" id='shipping_weight' value="">
+                                    <input type="text" class="form-control" name="shipping_weight" id='shipping_weight' value="">
                                 </div>
                             </div>
                             <div class="col-lg-3 col-md-3">
                                 <div class="form-group">
                                     <label for="weight_type">Formula</label>
-                                    <select disabled="disabled" class="form-control variant_specifics_url_change readonly no" name="weight_type" id='weight_type'>
+                                    <select class="form-control" name="weight_type" id='weight_type'>
                                         <option value='kg' selected="selected">KG</option>
                                         <option value='lbs' >LBS</option>
                                     </select>
@@ -182,25 +191,25 @@ while ($row = mysqli_fetch_array($result)) {
                             <div class="col-lg-3 col-md-3">
                                 <div class="form-group">
                                     <label for="shipping_length">Length: </label>
-                                    <input readonly="readonly" type="text" class="form-control variant_specifics_url_change readonly no" name="shipping_length" id='shipping_length'>
+                                    <input type="text" class="form-control" name="shipping_length" id='shipping_length'>
                                 </div>
                             </div>
                             <div class="col-lg-3 col-md-3">
                                 <div class="form-group">
                                     <label for="shipping_width">Width: </label>
-                                    <input readonly="readonly" type="text" class="form-control variant_specifics_url_change readonly no" name="shipping_width" id='shipping_width' value="">
+                                    <input type="text" class="form-control" name="shipping_width" id='shipping_width' value="">
                                 </div>
                             </div>
                             <div class="col-lg-3 col-md-3">
                                 <div class="form-group">
                                     <label for="shipping_height">Height: </label>
-                                    <input readonly="readonly" type="text" class="form-control variant_specifics_url_change readonly no" name="shipping_height" id='shipping_height' value="">
+                                    <input type="text" class="form-control" name="shipping_height" id='shipping_height' value="">
                                 </div>
                             </div>
                             <div class="col-lg-3 col-md-3">
                                 <div class="form-group">
                                     <label for="length_type">Formula</label>
-                                    <select disabled="disabled" class="form-control variant_specifics_url_change readonly no" name="length_type" id='length_type'>
+                                    <select class="form-control" name="length_type" id='length_type'>
                                         <option value='cm' selected="selected">cm</option>
                                         <option value='inch'>inch</option>
                                     </select>
@@ -211,7 +220,7 @@ while ($row = mysqli_fetch_array($result)) {
                             <div class="col-lg-12 col-md-12">								
                                 <div class="form-group">
                                     <label for="product_details">Product details: </label>
-                                    <textarea readonly="readonly" type="text" class="form-control variant_specifics_url_change readonly no" name="product_details" id='product_details' value=""> </textarea>
+                                    <textarea type="text" class="form-control" name="product_details" id='product_details' value=""> </textarea>
                                 </div>
                             </div>
                         </div>	
@@ -281,20 +290,13 @@ while ($row = mysqli_fetch_array($result)) {
                 
                 $('input[type="radio"]').change(function() {
                     if ($(this).val()=='1') {
-                        $("input.yes,textarea.yes").removeAttr('readonly');
-                        $("input.no,textarea.no").attr('readonly','readonly');
-                        
-                        $("select.yes").removeAttr('disabled');
-                        $("select.no").attr('disabled','disabled');
+                        $("#variant_specifics_url").removeAttr('disabled');
                     }
                     else{
-                        $("input.no,textarea.no").removeAttr('readonly');
-                        $("input.yes,textarea.yes").attr('readonly','readonly');
-                        
-                        $("select.no").removeAttr('disabled');
-                        $("select.yes").attr('disabled','disabled');
+                        $("#variant_specifics_url").attr('disabled','disabled');
+                        $("#variant_specifics_url").val('').html('');
                     }
-                    $(".variant_specifics_url_change").toggleClass('readonly');
+                    $("#variant_specifics_url").toggleClass('readonly');
                 });
                 
                 $('#dialog-form-login').keypress(function(e) {
@@ -348,11 +350,8 @@ while ($row = mysqli_fetch_array($result)) {
                             
                             if(typeof data === 'string'&&$.trim(data)=='success'){
                                 $("form#setting_form").trigger("reset");
-                                $("input.yes,textarea.yes").removeAttr('readonly');
-                                $("input.no,textarea.no").attr('readonly','readonly');
 
-                                $("select.yes").removeAttr('disabled');
-                                $("select.no").attr('disabled','disabled');
+                                $("#variant_specifics_url").removeAttr('disabled').removeClass('readonly');
                                 
                                 setTimeout(function () {
                                     $(".alert-success").hide();

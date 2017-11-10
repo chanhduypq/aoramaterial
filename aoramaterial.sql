@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2017-11-10 14:02:26
+Date: 2017-11-10 15:02:31
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -30,6 +30,7 @@ CREATE TABLE `aoramaterial` (
   `other_image` varchar(255) DEFAULT NULL,
   `main_category` varchar(255) DEFAULT NULL,
   `sub_category` varchar(255) DEFAULT NULL,
+  `sub_sub_category` varchar(255) DEFAULT NULL,
   `variant_specifics_url` varchar(255) DEFAULT NULL,
   `product_details` varchar(255) DEFAULT NULL,
   `shipping_weight` double(11,2) DEFAULT NULL,

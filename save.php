@@ -37,15 +37,7 @@ exit;
 function setup(&$data) {
     $data['user_id'] = $_SESSION['user_id'];
 
-    if ($data['variant_specifics_url_change'] == '1') {
-        unset($data['product_details']);
-        unset($data['shipping_weight']);
-        unset($data['shipping_length']);
-        unset($data['shipping_width']);
-        unset($data['shipping_height']);
-        unset($data['weight_type']);
-        unset($data['length_type']);
-    } else {
+    if ($data['variant_specifics_url_change'] == '0') {
         unset($data['variant_specifics_url']);
     }
 
