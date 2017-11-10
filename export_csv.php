@@ -31,8 +31,8 @@ while ($row = mysqli_fetch_array($result)) {
     }
     unset($row[0]);
     $row = array_map("utf8_decode", $row);
-    $row['price'] = ($row['price'] != '' ? number_format($row['price'], 0, ".", ",") : '');
-    $row['price_retail'] = ($row['price_retail'] != '' ? number_format($row['price_retail'], 0, ".", ",") : '');
+    $row['price'] = ($row['price'] != '' ? number_format($row['price'], 2, ".", ",") : '');
+    $row['price_retail'] = ($row['price_retail'] != '' ? number_format($row['price_retail'], 2, ".", ",") : '');
     $row['shipping_weight'] = ($row['shipping_weight'] != '' ? number_format($row['shipping_weight'], 2, ".", ",") : '');
     $row['shipping_length'] = ($row['shipping_length'] != '' ? number_format($row['shipping_weight'], 2, ".", ",") : '');
     $row['shipping_width'] = ($row['shipping_width'] != '' ? number_format($row['shipping_weight'], 2, ".", ",") : '');

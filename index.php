@@ -271,8 +271,8 @@ while ($row = mysqli_fetch_array($result)) {
                 $('#shipping_width').number( true, 2 );
                 $('#shipping_height').number( true, 2 );
                 $('#shipping_weight').number( true, 2 );
-                $('#price').number( true, 0 );
-                $('#price_retail').number( true, 0 );
+                $('#price').number( true, 2 );
+                $('#price_retail').number( true, 2 );
                 
                 height=$("#title").parent().parent().parent().height();
                 $("input[name='variant_specifics_url_change']").parent().parent().parent().parent().height(height);
