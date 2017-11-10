@@ -1,4 +1,5 @@
 <?php 
+session_start();
 $conn = mysqli_connect('localhost', 'root', '', 'aoramaterial');
 $result = mysqli_query($conn, "select * from currency");
 $currencys = array();
@@ -16,6 +17,8 @@ while ($row = mysqli_fetch_array($result)) {
         <title>Aora Material</title>
         <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="public/css/bootstrap.min.css">
+        <link rel="stylesheet" href="public/jquery-ui-1.10.3/themes/smoothness/jquery-ui.css" type="text/css"/>
+        <link rel="stylesheet" href="public/css/styles.css">
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
@@ -31,7 +34,11 @@ while ($row = mysqli_fetch_array($result)) {
                     <div class="navbar-header">
                         <a class="navbar-brand" href="index.php">Aora Material</a>
                     </div>
+                    <div class="navbar-header" style="float: right;">
+                        <a class="navbar-brand" href="export_csv.php">Export CSV</a>
+                    </div>
                 </div>
+                
             </nav>
         </div>
 
@@ -130,11 +137,11 @@ while ($row = mysqli_fetch_array($result)) {
                             <div class="col-lg-12 col-md-12">						
                                 <div class="form-group">
                                     <label style="cursor: default;">Variant specifics url change: </label>
-                                    <label class="radio">
+                                    <label class="radio-inline">
                                         <input type="radio" name="variant_specifics_url_change" checked="checked" value="1">
                                         Yes
                                     </label>
-                                    <label class="radio">
+                                    <label class="radio-inline">
                                         <input type="radio" name="variant_specifics_url_change" value="0">
                                         No
                                     </label>
@@ -145,7 +152,7 @@ while ($row = mysqli_fetch_array($result)) {
                             <div class="col-lg-12 col-md-12">								
                                 <div class="form-group">
                                     <label for="variant_specifics_url">Variant specifics url: </label>
-                                    <input type="text" class="form-control" name="variant_specifics_url" id='variant_specifics_url' value="">
+                                    <input type="text" class="form-control variant_specifics_url_change yes" name="variant_specifics_url" id='variant_specifics_url' value="">
                                 </div>
                             </div>
                         </div>									
@@ -153,13 +160,13 @@ while ($row = mysqli_fetch_array($result)) {
                             <div class="col-lg-9 col-md-9">
                                 <div class="form-group">
                                     <label for="shipping_weight">Shipping weight: </label>
-                                    <input type="text" class="form-control" name="shipping_weight" id='shipping_weight' value="">
+                                    <input readonly="readonly" type="text" class="form-control variant_specifics_url_change readonly no" name="shipping_weight" id='shipping_weight' value="">
                                 </div>
                             </div>
                             <div class="col-lg-3 col-md-3">
                                 <div class="form-group">
                                     <label for="weight_type">Formula</label>
-                                    <select class="form-control" name="weight_type" id='weight_type'>
+                                    <select disabled="disabled" class="form-control variant_specifics_url_change readonly no" name="weight_type" id='weight_type'>
                                         <option value='kg' selected="selected">KG</option>
                                         <option value='lbs' >LBS</option>
                                     </select>
@@ -175,25 +182,25 @@ while ($row = mysqli_fetch_array($result)) {
                             <div class="col-lg-3 col-md-3">
                                 <div class="form-group">
                                     <label for="shipping_length">Length: </label>
-                                    <input type="text" class="form-control" name="shipping_length" id='shipping_length'>
+                                    <input readonly="readonly" type="text" class="form-control variant_specifics_url_change readonly no" name="shipping_length" id='shipping_length'>
                                 </div>
                             </div>
                             <div class="col-lg-3 col-md-3">
                                 <div class="form-group">
                                     <label for="shipping_width">Width: </label>
-                                    <input type="text" class="form-control" name="shipping_width" id='shipping_width' value="">
+                                    <input readonly="readonly" type="text" class="form-control variant_specifics_url_change readonly no" name="shipping_width" id='shipping_width' value="">
                                 </div>
                             </div>
                             <div class="col-lg-3 col-md-3">
                                 <div class="form-group">
                                     <label for="shipping_height">Height: </label>
-                                    <input type="text" class="form-control" name="shipping_height" id='shipping_height' value="">
+                                    <input readonly="readonly" type="text" class="form-control variant_specifics_url_change readonly no" name="shipping_height" id='shipping_height' value="">
                                 </div>
                             </div>
                             <div class="col-lg-3 col-md-3">
                                 <div class="form-group">
                                     <label for="length_type">Formula</label>
-                                    <select class="form-control" name="length_type" id='length_type'>
+                                    <select disabled="disabled" class="form-control variant_specifics_url_change readonly no" name="length_type" id='length_type'>
                                         <option value='cm' selected="selected">cm</option>
                                         <option value='inch'>inch</option>
                                     </select>
@@ -204,7 +211,7 @@ while ($row = mysqli_fetch_array($result)) {
                             <div class="col-lg-12 col-md-12">								
                                 <div class="form-group">
                                     <label for="product_details">Product details: </label>
-                                    <textarea type="text" class="form-control" name="product_details" id='product_details' value=""> </textarea>
+                                    <textarea readonly="readonly" type="text" class="form-control variant_specifics_url_change readonly no" name="product_details" id='product_details' value=""> </textarea>
                                 </div>
                             </div>
                         </div>	
@@ -228,6 +235,7 @@ while ($row = mysqli_fetch_array($result)) {
             </form> 
         </div>
 
+        
         <footer class="m-t">
             <div class="container">
                 <div class="panel panel-default">
@@ -236,13 +244,29 @@ while ($row = mysqli_fetch_array($result)) {
                     </div>
                 </div>
         </footer>
+        
+        <div id="dialog-form-login" title="Login" style="display: none;">
+            <form id="loginForm">
+                <div id="thongBaologin" style="padding-left: 100px;color: red;">  
+                </div>
+                <div style="float: left;text-align: right;width: 30%;">email:</div>
+                <div style="float: left;"><input id="email" type="text" name="email"/></div>
+                <div style="clear: both;"></div>
+                <div style="float: left;text-align: right;margin-top: 10px;width: 30%;">password:</div>
+                <div style="float: left;margin-top: 10px;"><input type="password" name="password" id="password"/></div>
+                <div style="clear: both;"></div>                
+            </form>
+        </div>
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
         <script src="public/js/jquery-2.0.3.js"></script>
+        <script type="text/javascript" src="public/jquery-ui-1.10.3/ui/jquery-ui.js"></script> 
         <!-- Include all compiled plugins (below), or include individual files as needed -->
         <script src="public/js/bootstrap.min.js"></script>
         <script src="public/js/jquery.number.js"></script>
         <script>
-            $(function () {
+            
+            jQuery(function ($){
+        
                 $('#shipping_length').number( true, 2 );
                 $('#shipping_width').number( true, 2 );
                 $('#shipping_height').number( true, 2 );
@@ -250,12 +274,47 @@ while ($row = mysqli_fetch_array($result)) {
                 $('#price').number( true, 0 );
                 $('#price_retail').number( true, 0 );
                 
+                height=$("#title").parent().parent().parent().height();
+                $("input[name='variant_specifics_url_change']").parent().parent().parent().parent().height(height);
+                
                 $(".alert-success").hide();
+                
+                $('input[type="radio"]').change(function() {
+                    if ($(this).val()=='1') {
+                        $("input.yes,textarea.yes").removeAttr('readonly');
+                        $("input.no,textarea.no").attr('readonly','readonly');
+                        
+                        $("select.yes").removeAttr('disabled');
+                        $("select.no").attr('disabled','disabled');
+                    }
+                    else{
+                        $("input.no,textarea.no").removeAttr('readonly');
+                        $("input.yes,textarea.yes").attr('readonly','readonly');
+                        
+                        $("select.no").removeAttr('disabled');
+                        $("select.yes").attr('disabled','disabled');
+                    }
+                    $(".variant_specifics_url_change").toggleClass('readonly');
+                });
+                
+                $('#dialog-form-login').keypress(function(e) {
+                    if (e.keyCode == $.ui.keyCode.ENTER) {
+                      subLogin();
+                    }
+                });
+                
                 $('form#setting_form').on('submit', function (e) {
                     $(".alert-success").removeClass('error').hide();
                     $("#title").removeClass('error');
                     $("#url").removeClass('error');
                     e.preventDefault();
+                    <?php 
+                    if(!isset($_SESSION['user_id'])){?>
+                        showLoginForm();
+                        return;
+                    <?php 
+                    }
+                    ?>
                     $.ajax({
                         type: 'post',
                         url: 'save.php',
@@ -268,7 +327,6 @@ while ($row = mysqli_fetch_array($result)) {
                         },
                         success: function (data) {
                             $('#loading').hide();
-                            
                             
                             if(typeof data === 'string'&&$.trim(data)=='success'){
                                 $(".alert-success").html('You saved successfully');
@@ -290,6 +348,7 @@ while ($row = mysqli_fetch_array($result)) {
                             
                             if(typeof data === 'string'&&$.trim(data)=='success'){
                                 $("form#setting_form").trigger("reset");
+                                $("input[type='radio']").val('1').trigger('change');
                                 setTimeout(function () {
                                     $(".alert-success").hide();
                                 }, 3000);
@@ -300,146 +359,77 @@ while ($row = mysqli_fetch_array($result)) {
                     });
 
                 });
+                
+                dialogLogin = $("#dialog-form-login").dialog({
+                    autoOpen: false,
+                    show: {
+                        effect: "blind",
+                        duration: 1000
+                    },
+                    hide: {
+                        effect: "explode",
+                        duration: 1000
+                    },
+                    height: 400,
+                    width: 350,
+                    modal: true,
+                    buttons: {
+                        "Login": subLogin,
+                        "Close": function () {
+                            dialogLogin.dialog("close");
+                        }
+                    },
+                    close: function () {
+                        formLogin[ 0 ].reset();
+                    }
+                });
+
+                formLogin = dialogLogin.find("form#loginForm").on("submit", function (event) {
+                    event.preventDefault();
+                    subLogin();
+                });
+                
+                
+                function subLogin() {
+                    if (!validateLogin())
+                        return;
+                    jQuery.post('login.php', {'email': jQuery('input#email').val(), 'password': jQuery('input#password').val()}, function (resp) {
+                        if (resp == 'success') {
+                            window.location.reload();
+                        } else {
+                            jQuery('div#thongBaologin').html('wrong password or email');
+                        }
+                    });
+                }
+                function validateLogin() {
+
+                    if ($.trim($("#email").val()) == '') {
+                        $("#email").attr('style', "border-color: red;");
+                        $("#email").focus();
+                        return false;
+                    }
+                    if ($.trim($("#email").val()).indexOf(" ", 0) != -1) {
+                        $("#email").attr('style', "border-color: red;");
+                        $("#email").focus();
+                        return false;
+                    }
+                    if ($.trim($("#password").val()) == '') {
+                        $("#password").attr('style', "border-color: red;");
+                        $("#password").focus();
+                        return false;
+                    }
+
+                    return true;
+                }
+                function showLoginForm(){
+                    dialogLogin.dialog("open");
+                }
 
             });
 
         </script>
 
-        <style type="text/css">
-            label{
-                cursor: pointer;
-            }
-            label.radio{
-                width: 10%;
-                margin-left: 30px;
-            }
-            .alert-success.error{
-                color: red;
-            }
-            input.error{
-                border: 1px red solid;
-            }
-            /* Absolute Center Spinner */
-            .loading {
-                position: fixed;
-                z-index: 999;
-                height: 2em;
-                width: 2em;
-                overflow: show;
-                margin: auto;
-                top: 0;
-                left: 0;
-                bottom: 0;
-                right: 0;
-                display: none;
-            }
-
-            /* Transparent Overlay */
-            .loading:before {
-                content: '';
-                display: block;
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-color: rgba(0,0,0,0.3);
-            }
-
-            /* :not(:required) hides these rules from IE9 and below */
-            .loading:not(:required) {
-                /* hide "loading..." text */
-                font: 0/0 a;
-                color: transparent;
-                text-shadow: none;
-                background-color: transparent;
-                border: 0;
-            }
-
-            .loading:not(:required):after {
-                content: '';
-                display: block;
-                font-size: 10px;
-                width: 1em;
-                height: 1em;
-                margin-top: -0.5em;
-                -webkit-animation: spinner 1500ms infinite linear;
-                -moz-animation: spinner 1500ms infinite linear;
-                -ms-animation: spinner 1500ms infinite linear;
-                -o-animation: spinner 1500ms infinite linear;
-                animation: spinner 1500ms infinite linear;
-                border-radius: 0.5em;
-                -webkit-box-shadow: rgba(0, 0, 0, 0.75) 1.5em 0 0 0, rgba(0, 0, 0, 0.75) 1.1em 1.1em 0 0, rgba(0, 0, 0, 0.75) 0 1.5em 0 0, rgba(0, 0, 0, 0.75) -1.1em 1.1em 0 0, rgba(0, 0, 0, 0.5) -1.5em 0 0 0, rgba(0, 0, 0, 0.5) -1.1em -1.1em 0 0, rgba(0, 0, 0, 0.75) 0 -1.5em 0 0, rgba(0, 0, 0, 0.75) 1.1em -1.1em 0 0;
-                box-shadow: rgba(0, 0, 0, 0.75) 1.5em 0 0 0, rgba(0, 0, 0, 0.75) 1.1em 1.1em 0 0, rgba(0, 0, 0, 0.75) 0 1.5em 0 0, rgba(0, 0, 0, 0.75) -1.1em 1.1em 0 0, rgba(0, 0, 0, 0.75) -1.5em 0 0 0, rgba(0, 0, 0, 0.75) -1.1em -1.1em 0 0, rgba(0, 0, 0, 0.75) 0 -1.5em 0 0, rgba(0, 0, 0, 0.75) 1.1em -1.1em 0 0;
-            }
-
-            /* Animation */
-
-            @-webkit-keyframes spinner {
-                0% {
-                    -webkit-transform: rotate(0deg);
-                    -moz-transform: rotate(0deg);
-                    -ms-transform: rotate(0deg);
-                    -o-transform: rotate(0deg);
-                    transform: rotate(0deg);
-                }
-                100% {
-                    -webkit-transform: rotate(360deg);
-                    -moz-transform: rotate(360deg);
-                    -ms-transform: rotate(360deg);
-                    -o-transform: rotate(360deg);
-                    transform: rotate(360deg);
-                }
-            }
-            @-moz-keyframes spinner {
-                0% {
-                    -webkit-transform: rotate(0deg);
-                    -moz-transform: rotate(0deg);
-                    -ms-transform: rotate(0deg);
-                    -o-transform: rotate(0deg);
-                    transform: rotate(0deg);
-                }
-                100% {
-                    -webkit-transform: rotate(360deg);
-                    -moz-transform: rotate(360deg);
-                    -ms-transform: rotate(360deg);
-                    -o-transform: rotate(360deg);
-                    transform: rotate(360deg);
-                }
-            }
-            @-o-keyframes spinner {
-                0% {
-                    -webkit-transform: rotate(0deg);
-                    -moz-transform: rotate(0deg);
-                    -ms-transform: rotate(0deg);
-                    -o-transform: rotate(0deg);
-                    transform: rotate(0deg);
-                }
-                100% {
-                    -webkit-transform: rotate(360deg);
-                    -moz-transform: rotate(360deg);
-                    -ms-transform: rotate(360deg);
-                    -o-transform: rotate(360deg);
-                    transform: rotate(360deg);
-                }
-            }
-            @keyframes spinner {
-                0% {
-                    -webkit-transform: rotate(0deg);
-                    -moz-transform: rotate(0deg);
-                    -ms-transform: rotate(0deg);
-                    -o-transform: rotate(0deg);
-                    transform: rotate(0deg);
-                }
-                100% {
-                    -webkit-transform: rotate(360deg);
-                    -moz-transform: rotate(360deg);
-                    -ms-transform: rotate(360deg);
-                    -o-transform: rotate(360deg);
-                    transform: rotate(360deg);
-                }
-            }
-        </style>
+        
 
     </body>
 </html>
