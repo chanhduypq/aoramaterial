@@ -1,7 +1,6 @@
 <?php 
 session_start();
-include 'config.php';
-$conn = mysqli_connect($config['db_host'], $config['db_user'], $config['db_pass'], $config['db_name']);
+$conn = mysqli_connect('localhost', 'root', '', 'aoramaterial');
 $result = mysqli_query($conn, "select * from currency");
 $currencys = array();
 while ($row = mysqli_fetch_array($result)) {
@@ -84,12 +83,15 @@ while ($row = mysqli_fetch_array($result)) {
                                         foreach ($currencys as $currency) {
                                             if($currency['value']=='USD'){
                                                 $selected=' selected="selected"';
-                                            } else{
+                                            }
+                                            else{
                                                 $selected='';
                                             }
                                         ?>
                                         <option<?php echo $selected;?> value='<?php echo $currency['value'];?>'><?php echo $currency['name'];?></option>
-                                        <?php } ?>
+                                        <?php 
+                                        }
+                                        ?>
                                     </select>
                                 </div>
                             </div>
@@ -251,20 +253,19 @@ while ($row = mysqli_fetch_array($result)) {
                     </div>
                 </div>
         </footer>
-
+        
         <div id="dialog-form-login" title="Login" style="display: none;">
             <form id="loginForm">
-                <div id="thongBaologin" style="padding-left: 100px;color: red;">
+                <div id="thongBaologin" style="padding-left: 100px;color: red;">  
                 </div>
                 <div style="float: left;text-align: right;width: 30%;">email:</div>
                 <div style="float: left;"><input id="email" type="text" name="email"/></div>
                 <div style="clear: both;"></div>
                 <div style="float: left;text-align: right;margin-top: 10px;width: 30%;">password:</div>
                 <div style="float: left;margin-top: 10px;"><input type="password" name="password" id="password"/></div>
-                <div style="clear: both;"></div>
+                <div style="clear: both;"></div>                
             </form>
         </div>
-
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
         <script src="public/js/jquery-2.0.3.js"></script>
         <script type="text/javascript" src="public/jquery-ui-1.10.3/ui/jquery-ui.js"></script> 
@@ -272,7 +273,9 @@ while ($row = mysqli_fetch_array($result)) {
         <script src="public/js/bootstrap.min.js"></script>
         <script src="public/js/jquery.number.js"></script>
         <script>
+            
             jQuery(function ($){
+        
                 $('#shipping_length').number( true, 2 );
                 $('#shipping_width').number( true, 2 );
                 $('#shipping_height').number( true, 2 );
@@ -280,7 +283,7 @@ while ($row = mysqli_fetch_array($result)) {
                 $('#price').number( true, 2 );
                 $('#price_retail').number( true, 2 );
                 
-                var height=$("#title").parent().parent().parent().height();
+                height=$("#title").parent().parent().parent().height();
                 $("input[name='variant_specifics_url_change']").parent().parent().parent().parent().height(height);
                 
                 $(".alert-success").hide();
@@ -301,19 +304,19 @@ while ($row = mysqli_fetch_array($result)) {
                       subLogin();
                     }
                 });
-                var logined = false;
-                <?php if(!empty($_SESSION['user_id'])){ ?>
-                    logined = true;
-                <?php } ?>
+                
                 $('form#setting_form').on('submit', function (e) {
                     $(".alert-success").removeClass('error').hide();
                     $("#title").removeClass('error');
                     $("#url").removeClass('error');
                     e.preventDefault();
-                    if(!logined){
+                    <?php 
+                    if(!isset($_SESSION['user_id'])){?>
                         showLoginForm();
                         return;
+                    <?php 
                     }
+                    ?>
                     $.ajax({
                         type: 'post',
                         url: 'save.php',
@@ -326,32 +329,39 @@ while ($row = mysqli_fetch_array($result)) {
                         },
                         success: function (data) {
                             $('#loading').hide();
+                            
                             if(typeof data === 'string'&&$.trim(data)=='success'){
-                                alert('You saved successfully.');
-                            }else{
+                                $(".alert-success").html('You saved successfully');
+                            }
+                            else{
                                 data=$.parseJSON(data);
-                                var message = '';
                                 for(key in data){
-                                    if(key=='url'){
-                                        message = data.url;
-                                        $("#url").addClass('error');
-                                    }
                                     if(key=='title'){
-                                        message = data.title;
                                         $("#title").addClass('error');
                                     }
-                                    if(key=='no_user_id'){
-                                        message = data.no_user_id;
+                                    if(key=='url'){
+                                        $("#url").addClass('error');
                                     }
                                 }
-                                alert(message);
+                                $(".alert-success").html('Please input full information.').addClass('error');
+                                
                             }
+                            $(".alert-success").show();
+                            
                             if(typeof data === 'string'&&$.trim(data)=='success'){
                                 $("form#setting_form").trigger("reset");
+
                                 $("#variant_specifics_url").removeAttr('disabled').removeClass('readonly');
+                                
+                                setTimeout(function () {
+                                    $(".alert-success").hide();
+                                }, 3000);
+                                
                             }
+                            
                         }
                     });
+
                 });
                 
                 dialogLogin = $("#dialog-form-login").dialog({
@@ -377,24 +387,26 @@ while ($row = mysqli_fetch_array($result)) {
                         formLogin[ 0 ].reset();
                     }
                 });
+
                 formLogin = dialogLogin.find("form#loginForm").on("submit", function (event) {
                     event.preventDefault();
                     subLogin();
                 });
+                
+                
                 function subLogin() {
                     if (!validateLogin())
                         return;
                     jQuery.post('login.php', {'email': jQuery('input#email').val(), 'password': jQuery('input#password').val()}, function (resp) {
                         if (resp == 'success') {
-                            dialogLogin.dialog("close");
-                            logined = true;
-                            $('form#setting_form').submit();
+                            window.location.reload();
                         } else {
                             jQuery('div#thongBaologin').html('wrong password or email');
                         }
                     });
                 }
                 function validateLogin() {
+
                     if ($.trim($("#email").val()) == '') {
                         $("#email").attr('style', "border-color: red;");
                         $("#email").focus();
@@ -410,12 +422,18 @@ while ($row = mysqli_fetch_array($result)) {
                         $("#password").focus();
                         return false;
                     }
+
                     return true;
                 }
                 function showLoginForm(){
                     dialogLogin.dialog("open");
                 }
+
             });
+
         </script>
+
+        
+
     </body>
 </html>

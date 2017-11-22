@@ -2,8 +2,7 @@
 
 session_start();
 
-include 'config.php';
-$conn = mysqli_connect($config['db_host'], $config['db_user'], $config['db_pass'], $config['db_name']);
+$conn = mysqli_connect('localhost', 'root', '', 'aoramaterial');
 $email = str_replace("'", "\'", $_POST['email']);
 $password = sha1($_POST['password']);
 $result = mysqli_query($conn, "SELECT * FROM `user` WHERE email='$email' AND password='$password'");

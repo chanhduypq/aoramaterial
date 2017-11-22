@@ -7,22 +7,22 @@ if (!(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_R
     exit;
 }
 
-$error = array();
 if (!isset($_SESSION['user_id'])) {
-    $error['no_user_id'] = 'Please login first';
+    exit;
 }
+
+$error = array();
 if (trim($_POST['title']) == '') {
     $error['title'] = 'Please input title';
 }
 if (trim($_POST['url']) == '') {
-    $error['url'] = 'Please input url';
+    $error['url'] = 'Please input title';
 }
 if (count($error) > 0) {
     echo json_encode($error);
     exit;
 }
-include 'config.php';
-$conn = mysqli_connect($config['db_host'], $config['db_user'], $config['db_pass'], $config['db_name']);
+$conn = mysqli_connect('localhost', 'root', '', 'aoramaterial');
 $data = $_POST;
 
 setup($data);
