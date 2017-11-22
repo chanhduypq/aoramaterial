@@ -8,9 +8,6 @@ if (!(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_R
 }
 
 $error = array();
-if (!isset($_SESSION['user_id'])) {
-    $error['no_user_id'] = 'Please login first';
-}
 if (trim($_POST['title']) == '') {
     $error['title'] = 'Please input title';
 }

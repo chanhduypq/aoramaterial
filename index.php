@@ -26,8 +26,74 @@ while ($row = mysqli_fetch_array($result)) {
           <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
           <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
+        
+        <style>
+/*            #add-new #expand_for_user {
+                float: right;
+                cursor: pointer !important;
+                list-style: none;
+                margin-right: 5px;
+            }
+
+            #add-new {
+                float: right;
+                width: 25%;
+                height: auto;
+                text-align: left;
+            }
+            #admin-setting {
+                display: none;
+                position: fixed;
+                width: 320px;
+                height: auto;
+                right: 10%;
+                background: url(public/images/icon-admindown.png) top right no-repeat;
+                background-color: #FFF;
+                box-shadow: 0 0 10px #888;
+                border: 1px solid #2d353c;
+                border-top: 3px solid #2d353c;
+                color: #000;
+                text-align: left;
+                padding: 15px;
+                font-size: 13px;
+                font-weight: 400;
+                line-height: 25px;
+                z-index: 9999;
+                top:10%;
+            }
+            #admin-setting li{
+                list-style: none;
+            }
+            #admin-setting .a_li{ 
+                height: 40px;
+            }
+            #admin-setting .a_img {
+                float: left;
+                padding: 10px 0 0 15px;
+            }
+            #admin-setting .a_text {
+                float: left;
+                padding: 8px 0 0 15px;
+            }
+            #admin-setting .a_li:hover{
+                background-color:#d5d5d5;
+                border-radius:4px;
+                cursor:pointer;
+            }*/
+        </style>
+
     </head>
     <body>
+<!--        <div id="add-new">
+            <li class="but-add" id="expand_for_user">
+                <img src="public/images/icon-user.png" style="width: 50px;height: 50px;">
+            </li>
+        </div>
+        <div id="admin-setting">
+            <li class="a_li" style="cursor: auto;text-align: center;" id="danh_xung_full_name"><b>name</b></li>
+            <li class="a_li" id="changePassword"><p class="a_text">Đổi mật khẩu</p></li>
+            <li onclick="window.location = 'logout.php';" class="a_li"><p class="a_text">Sign out</p></li>
+        </div>-->
         <div class="loading" id="loading">Loading&#8230;</div>
         <div class="container">
             <nav class="navbar navbar-default">
@@ -37,6 +103,9 @@ while ($row = mysqli_fetch_array($result)) {
                     </div>
                     <div class="navbar-header" style="float: right;">
                         <a class="navbar-brand" href="export_csv.php">Export CSV</a>
+                        <?php if(!empty($_SESSION['user_id'])){?>
+                        <a class="navbar-brand" href="logout.php">Sign out</a>
+                        <?php }?>
                     </div>
                 </div>
                 
@@ -252,7 +321,7 @@ while ($row = mysqli_fetch_array($result)) {
                 </div>
         </footer>
 
-        <div id="dialog-form-login" title="Login" style="display: none;">
+        <div id="dialog-form-login" title="Sign in" style="display: none;">
             <form id="loginForm">
                 <div id="thongBaologin" style="padding-left: 100px;color: red;">
                 </div>
@@ -273,6 +342,29 @@ while ($row = mysqli_fetch_array($result)) {
         <script src="public/js/jquery.number.js"></script>
         <script>
             jQuery(function ($){
+//                $("#expand_for_user").click(function () {
+//                    if ($("#admin-setting").is(":visible")) {
+//                        $("#setting").next().hide(500);
+//                        $("#admin-setting").hide(500);
+//                        if ($("div.back_button").length > 0) {
+//                            $("div.back_button").show();
+//                        }
+//
+//                    } else {
+//                        $("#admin-setting").show(500);
+//                        $("div.back_button").hide();
+//                    }
+//                });
+//                $(document).click(function (event) {
+//                    if ($(event.target).closest('#expand_for_user').get(0) == null && $(event.target).closest('li#setting').get(0) == null && $(event.target).closest('li#danh_xung_full_name').get(0) == null) {
+//                        $("#setting").next().hide(500);
+//                        $("#admin-setting").hide(500);
+//                        if ($("div.back_button").length > 0) {
+//                            $("div.back_button").show();
+//                        }
+//                    }
+//                });
+        
                 $('#shipping_length').number( true, 2 );
                 $('#shipping_width').number( true, 2 );
                 $('#shipping_height').number( true, 2 );
@@ -301,19 +393,11 @@ while ($row = mysqli_fetch_array($result)) {
                       subLogin();
                     }
                 });
-                var logined = false;
-                <?php if(!empty($_SESSION['user_id'])){ ?>
-                    logined = true;
-                <?php } ?>
                 $('form#setting_form').on('submit', function (e) {
                     $(".alert-success").removeClass('error').hide();
                     $("#title").removeClass('error');
                     $("#url").removeClass('error');
                     e.preventDefault();
-                    if(!logined){
-                        showLoginForm();
-                        return;
-                    }
                     $.ajax({
                         type: 'post',
                         url: 'save.php',
@@ -353,9 +437,9 @@ while ($row = mysqli_fetch_array($result)) {
                         }
                     });
                 });
-                
+                <?php if(empty($_SESSION['user_id'])){?>
                 dialogLogin = $("#dialog-form-login").dialog({
-                    autoOpen: false,
+                    autoOpen: true,
                     show: {
                         effect: "blind",
                         duration: 1000
@@ -368,15 +452,10 @@ while ($row = mysqli_fetch_array($result)) {
                     width: 350,
                     modal: true,
                     buttons: {
-                        "Login": subLogin,
-                        "Close": function () {
-                            dialogLogin.dialog("close");
-                        }
-                    },
-                    close: function () {
-                        formLogin[ 0 ].reset();
+                        "Sign in": subLogin
                     }
                 });
+                $(".ui-dialog-titlebar-close").hide();
                 formLogin = dialogLogin.find("form#loginForm").on("submit", function (event) {
                     event.preventDefault();
                     subLogin();
@@ -386,9 +465,7 @@ while ($row = mysqli_fetch_array($result)) {
                         return;
                     jQuery.post('login.php', {'email': jQuery('input#email').val(), 'password': jQuery('input#password').val()}, function (resp) {
                         if (resp == 'success') {
-                            dialogLogin.dialog("close");
-                            logined = true;
-                            $('form#setting_form').submit();
+                            window.location.reload();
                         } else {
                             jQuery('div#thongBaologin').html('wrong password or email');
                         }
@@ -415,6 +492,9 @@ while ($row = mysqli_fetch_array($result)) {
                 function showLoginForm(){
                     dialogLogin.dialog("open");
                 }
+                <?php 
+                }
+                ?>
             });
         </script>
     </body>
